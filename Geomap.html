@@ -5,6 +5,7 @@
 
         .buttons{
             text-align: center;
+           
         }
 </style>
         <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
@@ -18,7 +19,9 @@
 
     <body>
     <div style="font-family: 'Lato', sans-serif; text-align: center"><h1>Temperature through the years</h1></div>
-    <div class="h2header" style="font-family: 'Lato', sans-serif; text-align: center">Januari 1912</div>
+    <div style="font-family: 'Lato', sans-serif; text-align: center"><p>Below we have the average temperature in January 1912.</p><p> With the buttons it is possible to switch between 1912 and 2012 for the months January and August.</p></div>
+    <div style="font-family: 'Lato', sans-serif; text-align: center"><p><a href="d3Bar.html" >Previous Chart</a></p></div>
+    <div class="h2header" style="font-family: 'Lato', sans-serif; text-align: center;">January 1912</div>
     <div class="buttons">
     </div>
        
@@ -35,7 +38,7 @@
             var Aug2013;
             var paletteScale;
             var dataset = {};
-            var set=0;
+            var set=1;
             var highestValue;
 
 
@@ -57,7 +60,7 @@
                 projection: 'mercator'
             });
 
-            d3.csv("Jan2012.csv", function(data) {
+            d3.csv("Jan1912.csv", function(data) {
                 tempByCountry = data;
             });
 
@@ -111,8 +114,8 @@
                     }
                     console.log('Done!');
                     setColours(-28,30);
-                    clearInterval(loadInterval);
                     
+                    clearInterval(loadInterval);
                 }
 
             }
@@ -152,7 +155,7 @@
             }
              
                 d3.select(".buttons").append("button")
-                .text("Januari")
+                .text("January")
                 .on("click",function(){
                      dataset = {};
                      tempByCountry = {};
@@ -166,7 +169,7 @@
                         map.updateChoropleth(null, {reset: true})
                     
                         set = 1;
-                        d3.select(".h2header").text("Januari 1912");
+                        d3.select(".h2header").text("January 1912");
                     }
                     else
                     {
@@ -178,7 +181,7 @@
                         map.updateChoropleth(null, {reset: true})
                         
                         set = 0;
-                        d3.select(".h2header").text("Januari 2012");
+                        d3.select(".h2header").text("January 2012");
                     }
                     updateMap(paletteScale,tempByCountry); 
                 });
