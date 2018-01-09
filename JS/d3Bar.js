@@ -44,28 +44,24 @@ d3.csv("AugGlobalTemp.csv", function(error, data) {
       .data(data)
     .enter().append("g")
       .attr("class", "bar")
-      
+      .attr("transform", function(d) { return "translate(0," + y(d.Country) + ")"; });
 
   var bar2 = svg.selectAll("g.bar2")
       .data(tempByCountry)
     .enter().append("g")
     .attr("class", "bar2")
-    
+    .attr("transform", function(d) { return "translate(0," + y(d.Country) + ")"; });
 
  
 
   bar.append("rect")
-      .attr("height", y.rangeBand())
-      .attr("y", function(d) { return y(d.AverageTemperature); })
-      .attr("width", function(d) { return x(d.AverageTemperature); }).transition().duration(2000)
+      .attr("width", function(d) { return x(d.AverageTemperature); })
+      .attr("height", y.rangeBand());
 
-      .attr("transform", function(d) { return "translate(0," + y(d.Country) + ")"; })
-      
   bar2.append("rect")
-      .attr("height", y.rangeBand())
-      .attr("y", function(d) { return y(tempByCountry.AverageTemperature); })
       .attr("width", function(tempByCountry) { return x(tempByCountry.AverageTemperature); })
-      .attr("transform", function(d) { return "translate(0," + y(d.Country) + ")"; })
+      .attr("height", y.rangeBand());
+
 
   // bar.append("text")
   //     .attr("class", "value")

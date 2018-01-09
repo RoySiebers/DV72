@@ -32,7 +32,12 @@ var svg = d3.select("body").append("svg")
           "translate(" + margin.left + "," + margin.top + ")");
 
 
-
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "<strong>Frequency:</strong> <span style='color:red'>" + d.LandAverageTemperature + "</span>";
+  })
 // get the data
 d3.csv("TempFrom1900.csv", function(error, data) {
   if (error) throw error;
