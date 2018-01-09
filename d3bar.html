@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+.divText {
+    font: 15px arial, sans-serif;
+
+}
+.divNextPage{
+  font: 15px arial, sans-serif;
+}
+.bar rect {
+  fill:#005271;
+}
+
+.bar text.value {
+  fill: white;
+}
+
+.bar2 rect {
+  fill:black;
+  opacity: 0.4;
+}
+
+.bar2 text.value {
+  fill: white;
+}
+
+.axis {
+  shape-rendering: crispEdges;
+}
+
+.axis path {
+  fill: none;
+}
+
+.x.axis line {
+  stroke: #fff;
+  stroke-opacity: .8;
+}
+
+.y.axis path {
+  stroke: black;
+}
+svg{
+
+  float: left;
+}
+
+</style>
+<body>
+<script src="D3_3/d3.js"></script>
+<script type="text/javascript" src="JS/d3Bar.js"></script>
+
+<div class ="divText">
+  <h1>Bar Chart</h1>
+  <p>In this chart the global land average temperature data of the countries from 2 points of data have been visualized.</p>
+  <p>On the left we can see the data of the year 1900, this will be visable throughout the animation to show the increase and decrease of the temperature as comparison.</p>
+  <p>Click on start to start the animation, click on stop to stop the animation.</p>
+  <p>It is also possible to add years manually but when doing this stop the animation of wait for it to finish please.</p>
+</div>
+<div class="divButton"> 
+</div>
+<br>
+<div class = "divNextPage"> 
+ <p><a href="Geomap.html" >Next Chart</a></p>
+ <p><a href="BarChart.html" >Previous Chart</a></p>
+</div>
+</body>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+
+.bar { fill: #005271; 
+opacity: 0.5;}
+.bar2 { fill: #005271;
+opacity: 0.8;}
+.buttonStart{
+  display: inline-block;
+  margin-left:40px;
+  float: left;  
+
+}
+
+}
+.button{
+  display: inline-block;
+  float: left;
+  background-color: green;
+
+  }
+svg{
+
+  background-color: red;
+  text-align: center;
+  float: left;
+ 
+}
+.divText{
+  background-color: blue;
+}
+</style>
+<body>
+
+<!-- load the d3.js library -->    	
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="index.js"></script>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 900 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+var monthData
+var x1
+var timer
+var testDate
+var interval
+var data_1912
+// set the ranges
+var x = d3.scaleBand()
+          .range([0, width])
+          .padding(0.1);
+
+
+var y = d3.scaleLinear()
+          .range([height, 0]);
+
+var count = 0;
+var year = 0;
+timer = 0;
+// append the svg object to the body of the page
+// append a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
+
+
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "<strong>Frequency:</strong> <span style='color:red'>" + d.LandAverageTemperature + "</span>";
+  })
+// get the data
+d3.csv("TempFrom1900.csv", function(error, data) {
+  if (error) throw error;
+
+monthData = data.slice(0,12);
+data_1912 = data.slice(0,12);
+// var count = 0;
+// var data[];
+
+x1 = d3.scaleTime()
+    .domain([new Date(monthData[0].dt), new Date(monthData[11].dt)])
+    .range([0,  width]);
+// for (i = 0; i <115 ; i++) {
+//     data[i] = data.slice(count,count+12);
+//     count = count+13;  
+// }
+   // format the data
+ data.forEach(function(d) {
+   d.LandAverageTemperature = +d.LandAverageTemperature;
+  });
+ var old_data = true;
+ 
+
+  // Scale the range of the data in the domains
+  x.domain(monthData.map(function(d) { return d.dt; }));
+  y.domain([0, 2+d3.max(monthData, function(d) { return d.LandAverageTemperature; })]);
+
+  // append the rectangles for the bar chart
+  
+
+
+  svg.selectAll(".bar")
+      .data(monthData)
+    .enter().append("rect").transition().duration(0)
+
+      .attr("class", "bar")
+      .attr("height", function(d) { return height - y(d.LandAverageTemperature); })
+      .attr("x",function(d) { return x(d.dt); })
+      .attr("width", x.bandwidth())
+      .attr("y", function(d) { return y(d.LandAverageTemperature); })
+
+  svg.selectAll(".bar2")
+                    .data(data_1912)
+                  .enter().append("rect").transition().duration(0)
+
+                    .attr("class", "bar2")
+                    .attr("height", function(d) { return height - y(d.LandAverageTemperature); })
+                    .attr("x",function(d) { return x(d.dt); })
+                    .attr("width", x.bandwidth())
+                    .attr("y", function(d) { return y(d.LandAverageTemperature); })    
+  
+
+  d3.select(".divButton").append("button")
+                .text("Start")
+                .attr("class","buttonStart")
+
+                .on("click",function(){
+                  if(timer == 0)
+                    {
+                      timer = 200
+                    }
+
+                  interval = window.setInterval(function() {
+                  
+
+                  svg.selectAll(".bar2")
+                    .data(data_1912)
+                  .enter().append("rect").transition().duration(0)
+
+                    .attr("class", "bar2")
+                    .attr("height", function(d) { return height - y(d.LandAverageTemperature); })
+                    .attr("x",function(d) { return x(d.dt); })
+                    .attr("width", x.bandwidth())
+                    .attr("y", function(d) { return y(d.LandAverageTemperature); })
+
+
+
+
+                   
+                   
+                    //rejoin data
+                    var bar = svg.selectAll(".bar")
+                        .data(eval(monthData))
+                       
+                        
+                    bar.exit().remove();
+                    bar.enter().append("rect")
+                        .attr("height",0);
+                        
+                    x.domain(monthData.map(function(d) { return d.dt; }));
+                    
+                    
+
+                    bar.transition()
+                        .duration(300)
+                        .attr("class", "bar")
+                        .attr("height", function(d) { return height - y(d.LandAverageTemperature); })
+                        .attr("x", function(d) { return x(d.dt); })
+                        .attr("width", x.bandwidth())
+                        .attr("y", function(d) { return y(d.LandAverageTemperature); });
+
+                    // d3.select("text").exit().remove();      
+                      d3.select("title").text(monthData.map(function(d) { return monthData.dt; }));
+
+                   svg.select(".axis")
+                    .call(d3.axisBottom(x))
+                  count = count +12;
+                  monthData = data.slice(count,(count+12));
+                  year = count/12+1900;
+                  console.log(year);
+                  if(count/12 >= 116)
+                  {
+                    window.clearInterval(interval);
+                    this.disable = true;
+                    count = 0;
+                    monthData = data.slice(count,(count+12));
+
+                    year = count/12+1900;
+                    
+                    }
+                },timer)});//end click function
+
+d3.select(".divButton").append("button")
+                .text("Stop")
+                .attr("class","button")
+                .on("click",function(){
+                  if(timer == 200)
+                  {
+                    window.clearInterval(interval);
+                    this.disable = true;
+                  }
+
+                });//end click function
+d3.select(".divButton").append("button")
+                .text("1 year")
+                .attr("class","button")
+                .on("click",function(){
+                    //select new data
+                    // if (old_data==true) {
+                    //     monthData=data.slice(12,24);
+                    //     old_data=false;  
+                    // } else   {
+                    //     monthData=data.slice(0,12);
+                    //     old_data=true; 
+                    // }
+                    count = count +12;
+                    monthData = data.slice(count,(count+12));
+                    year = count/12+1900;
+                    console.log(year);
+                    if(count/12 >= 115)
+                    {
+                      count = 0;
+                      monthData = data.slice(count,(count+12));
+                      year = count/12+1900;
+                    }
+
+                   
+                   
+                    //rejoin data
+                    var bar = svg.selectAll(".bar")
+                        .data(eval(monthData));
+
+                    
+                    bar.exit().remove();
+                    bar.enter().append("rect")
+                        .attr("height",0);
+
+                    x.domain(monthData.map(function(d) { return d.dt; }));
+                    
+                    
+
+                    bar.transition()
+                        .duration(200)
+                        .attr("class", "bar")
+                        .attr("height", function(d) { return height - y(d.LandAverageTemperature); })
+                        .attr("x", function(d) { return x(d.dt); })
+                        .attr("width", x.bandwidth())
+                        .attr("y", function(d) { return y(d.LandAverageTemperature); });
+                    // d3.select("text").exit().remove();      
+                      d3.select("title").text(monthData.map(function(d) { return monthData.dt; }));
+
+                   svg.select(".axis")
+                    .call(d3.axisBottom(x))
+                });//end click function
+d3.select(".divButton").append("button")
+                .text("5 year")
+                .attr("class","button")
+                .on("click",function(){
+                    //select new data
+                    // if (old_data==true) {
+                    //     monthData=data.slice(12,24);
+                    //     old_data=false;  
+                    // } else   {
+                    //     monthData=data.slice(0,12);
+                    //     old_data=true; 
+                    // }
+                    count = count +60;
+                    monthData = data.slice(count,(count+12));
+                    year = count/12+1900;
+                    
+                    if(year >= 2016)
+                    {
+                      count = 1380;
+                      monthData = data.slice(count,(count+12));
+                  
+                      year = count/12+1900;
+                      console.log(count);
+                      console.log(year);
+                      count = 0;
+                    }
+
+                    
+                   
+                   
+                    //rejoin data
+                    var bar = svg.selectAll(".bar")
+                        .data(eval(monthData));
+
+                    
+                    bar.exit().remove();
+                    bar.enter().append("rect")
+                        .attr("height",0);
+
+                    x.domain(monthData.map(function(d) { return d.dt; }));
+                   
+                    
+
+                    bar.transition()
+                        .duration(200)
+                        .attr("class", "bar")
+                        .attr("height", function(d) { return height - y(d.LandAverageTemperature); })
+                        .attr("x", function(d) { return x(d.dt); })
+                        .attr("width", x.bandwidth())
+                        .attr("y", function(d) { return y(d.LandAverageTemperature); });
+                    // d3.select("text").exit().remove();      
+                      d3.select("title").text(monthData.map(function(d) { return monthData.dt; }));
+
+                   svg.select(".axis")
+                    .call(d3.axisBottom(x))
+                });//end click function
+d3.select(".divButton").append("button")
+                .text("10 year")
+                .attr("class","button")
+                .on("click",function(){
+                    //select new data
+                    // if (old_data==true) {
+                    //     monthData=data.slice(12,24);
+                    //     old_data=false;  
+                    // } else   {
+                    //     monthData=data.slice(0,12);
+                    //     old_data=true; 
+                    // }
+                    count = count +120;
+                    monthData = data.slice(count,(count+12));
+                    year = count/12+1900;
+                    
+                    if(year >= 2016)
+                    {
+                      count = 1380;
+                      monthData = data.slice(count,(count+12));
+                  
+                      year = count/12+1900;
+                      console.log(count);
+                      console.log(year);
+                      count = 0;
+                    }
+
+                    
+                   
+                   
+                    //rejoin data
+                    var bar = svg.selectAll(".bar")
+                        .data(eval(monthData));
+
+                    
+                    bar.exit().remove();
+                    bar.enter().append("rect")
+                        .attr("height",0);
+
+                    x.domain(monthData.map(function(d) { return d.dt; }));
+                    
+                    
+
+                    bar.transition()
+                        .duration(200)
+                        .attr("class", "bar")
+                        .attr("height", function(d) { return height - y(d.LandAverageTemperature); })
+                        .attr("x", function(d) { return x(d.dt); })
+                        .attr("width", x.bandwidth())
+                        .attr("y", function(d) { return y(d.LandAverageTemperature); });
+                    // d3.select("text").exit().remove();      
+                      d3.select("title").text(monthData.map(function(d) { return monthData.dt; }));
+
+                   svg.select(".axis")
+                    .call(d3.axisBottom(x))
+                });//end click function
+
+
+  
+
+  // add the x Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .attr("class","axis")
+      .call(d3.axisBottom(x))
+
+  // add the y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y));
+
+  
+
+});
+
+</script>
+<div class ="divText">
+  <p>So if i type some text over here it will show properly?</p>
+</div>
+<div class="divButton"> 
+</div>
+</body>

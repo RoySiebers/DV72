@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+
+.bar { fill: #005271; 
+opacity: 0.5;}
+.bar2 { fill: #005271;
+opacity: 0.8;}
+.buttonStart{
+  display: inline-block;
+  margin-left:0px;
+  float: left;  
+
+}
+.buttonStop{
+  display: inline-block;
+  float: left;
+
+
+  }
+
+.button{
+  display: inline-block;
+  float: left;
+
+
+  }
+
+body{
+    font: 15px arial, sans-serif;
+}
+
+
+svg{
+
+ 
+  text-align: center;
+  float: left;
+ 
+}
+.divText{
+
+}
+.divNextPage{
+  }
+</style>
+<body>
+
+<!-- load the d3.js library -->    	
+<script src="D3_4/d3.js"></script>
+<script src="index.js"></script>
+<script type="text/javascript" src="JS/BarChart.js"></script>
+
+
+
+<div class ="divText">
+  <h1>Animated Bar chart</h1>
+  <p>In this chart the global land average temperature data has been split into months of their respective years, because the data from 1750 till 1900 had a very high uncertainty factor i have decided to leave those years out.</p>
+  <p>On the left we can see the data of the year 1900, this will be visable throughout the animation to show the increase and decrease of the temperature as comparison.</p>
+  <p>Click on start to start the animation, click on stop to stop the animation.</p>
+  <p>It is also possible to add years manually but when doing this stop the animation of wait for it to finish please.</p>
+</div>
+<div class="divButton"> 
+</div>
+<br>
+<div class = "divNextPage"> 
+ <p><a href="d3bar.html" >Next Chart</a></p>
+ <p><a href="d3Line.html" >Previous Chart</a></p>
+</div>
+</body>
